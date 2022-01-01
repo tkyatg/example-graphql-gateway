@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "DavidAnson.vscode-markdownlint",
+    "esbenp.prettier-vscode",
+    "rebornix.project-snippets",
+    "graphql.vscode-graphql",
+    "rangav.vscode-thunder-client",
+    "golang.Go"
+  ]
+}

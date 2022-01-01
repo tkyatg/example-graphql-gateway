@@ -1,0 +1,7 @@
+FROM golang:1.16.3-alpine
+WORKDIR /app
+RUN apk add --no-cache tzdata git && \
+    go get github.com/pilu/fresh
+ENV TZ=Asia/Tokyo
+COPY . .
+CMD ["sh", "./.scripts/init.sh"]

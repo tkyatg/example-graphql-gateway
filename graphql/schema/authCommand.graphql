@@ -1,0 +1,10 @@
+input AuthorizeRequest {
+  email: String!
+  password: String!
+}
+type AuthorizeResponse {
+  jwtToken: String!
+}
+extend type Mutation {
+  authorize(input: AuthorizeRequest!): AuthorizeResponse!
+}
