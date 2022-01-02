@@ -53,7 +53,12 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		HelthCheck func(childComplexity int) int
+		GetLoginUser func(childComplexity int) int
+		HelthCheck   func(childComplexity int) int
+	}
+
+	GetLoginUserResponse struct {
+		UserUUID func(childComplexity int) int
 	}
 }
 
@@ -63,6 +68,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	HelthCheck(ctx context.Context) (bool, error)
+	GetLoginUser(ctx context.Context) (*model.GetLoginUserResponse, error)
 }
 
 type executableSchema struct {
@@ -106,12 +112,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.HelthCheck(childComplexity), true
 
+	case "Query.getLoginUser":
+		if e.complexity.Query.GetLoginUser == nil {
+			break
+		}
+
+		return e.complexity.Query.GetLoginUser(childComplexity), true
+
 	case "Query.helthCheck":
 		if e.complexity.Query.HelthCheck == nil {
 			break
 		}
 
 		return e.complexity.Query.HelthCheck(childComplexity), true
+
+	case "getLoginUserResponse.userUUID":
+		if e.complexity.GetLoginUserResponse.UserUUID == nil {
+			break
+		}
+
+		return e.complexity.GetLoginUserResponse.UserUUID(childComplexity), true
 
 	}
 	return 0, false
@@ -196,6 +216,13 @@ type Mutation {
   helthCheck: Boolean!
 }
 `, BuiltIn: false},
+	{Name: "schema/userQuery.graphql", Input: `type getLoginUserResponse {
+  userUUID: String!
+}
+extend type Query {
+  getLoginUser: getLoginUserResponse!
+}
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -209,7 +236,7 @@ func (ec *executionContext) field_Mutation_authorize_args(ctx context.Context, r
 	var arg0 model.AuthorizeRequest
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNAuthorizeRequest2exampleᚑgraphqlᚑgatewayᚋgraphᚋgeneratedᚋmodelᚐAuthorizeRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNAuthorizeRequest2exampleᚑgraphqlᚑgrpcᚋgraphqlᚋgraphᚋgeneratedᚋmodelᚐAuthorizeRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -380,7 +407,7 @@ func (ec *executionContext) _Mutation_authorize(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.AuthorizeResponse)
 	fc.Result = res
-	return ec.marshalNAuthorizeResponse2ᚖexampleᚑgraphqlᚑgatewayᚋgraphᚋgeneratedᚋmodelᚐAuthorizeResponse(ctx, field.Selections, res)
+	return ec.marshalNAuthorizeResponse2ᚖexampleᚑgraphqlᚑgrpcᚋgraphqlᚋgraphᚋgeneratedᚋmodelᚐAuthorizeResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_helthCheck(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -416,6 +443,41 @@ func (ec *executionContext) _Query_helthCheck(ctx context.Context, field graphql
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getLoginUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetLoginUser(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.GetLoginUserResponse)
+	fc.Result = res
+	return ec.marshalNgetLoginUserResponse2ᚖexampleᚑgraphqlᚑgrpcᚋgraphqlᚋgraphᚋgeneratedᚋmodelᚐGetLoginUserResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1607,6 +1669,41 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 	return ec.marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _getLoginUserResponse_userUUID(ctx context.Context, field graphql.CollectedField, obj *model.GetLoginUserResponse) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "getLoginUserResponse",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserUUID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
@@ -1737,6 +1834,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_helthCheck(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "getLoginUser":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getLoginUser(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -2003,20 +2114,47 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 	return out
 }
 
+var getLoginUserResponseImplementors = []string{"getLoginUserResponse"}
+
+func (ec *executionContext) _getLoginUserResponse(ctx context.Context, sel ast.SelectionSet, obj *model.GetLoginUserResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, getLoginUserResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("getLoginUserResponse")
+		case "userUUID":
+			out.Values[i] = ec._getLoginUserResponse_userUUID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 // endregion **************************** object.gotpl ****************************
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) unmarshalNAuthorizeRequest2exampleᚑgraphqlᚑgatewayᚋgraphᚋgeneratedᚋmodelᚐAuthorizeRequest(ctx context.Context, v interface{}) (model.AuthorizeRequest, error) {
+func (ec *executionContext) unmarshalNAuthorizeRequest2exampleᚑgraphqlᚑgrpcᚋgraphqlᚋgraphᚋgeneratedᚋmodelᚐAuthorizeRequest(ctx context.Context, v interface{}) (model.AuthorizeRequest, error) {
 	res, err := ec.unmarshalInputAuthorizeRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAuthorizeResponse2exampleᚑgraphqlᚑgatewayᚋgraphᚋgeneratedᚋmodelᚐAuthorizeResponse(ctx context.Context, sel ast.SelectionSet, v model.AuthorizeResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNAuthorizeResponse2exampleᚑgraphqlᚑgrpcᚋgraphqlᚋgraphᚋgeneratedᚋmodelᚐAuthorizeResponse(ctx context.Context, sel ast.SelectionSet, v model.AuthorizeResponse) graphql.Marshaler {
 	return ec._AuthorizeResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNAuthorizeResponse2ᚖexampleᚑgraphqlᚑgatewayᚋgraphᚋgeneratedᚋmodelᚐAuthorizeResponse(ctx context.Context, sel ast.SelectionSet, v *model.AuthorizeResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNAuthorizeResponse2ᚖexampleᚑgraphqlᚑgrpcᚋgraphqlᚋgraphᚋgeneratedᚋmodelᚐAuthorizeResponse(ctx context.Context, sel ast.SelectionSet, v *model.AuthorizeResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2311,6 +2449,20 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNgetLoginUserResponse2exampleᚑgraphqlᚑgrpcᚋgraphqlᚋgraphᚋgeneratedᚋmodelᚐGetLoginUserResponse(ctx context.Context, sel ast.SelectionSet, v model.GetLoginUserResponse) graphql.Marshaler {
+	return ec._getLoginUserResponse(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNgetLoginUserResponse2ᚖexampleᚑgraphqlᚑgrpcᚋgraphqlᚋgraphᚋgeneratedᚋmodelᚐGetLoginUserResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetLoginUserResponse) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._getLoginUserResponse(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

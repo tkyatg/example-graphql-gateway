@@ -1,0 +1,6 @@
+type getLoginUserResponse {
+  userUUID: String!
+}
+extend type Query {
+  getLoginUser: getLoginUserResponse!
+}

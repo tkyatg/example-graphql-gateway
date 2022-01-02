@@ -6,7 +6,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/lib/pq v1.10.4
 	github.com/softia-inc/dject v1.0.0
-	github.com/tkyatg/example-grpc-definition v0.0.0-20220101015842-f11900a60269
+	github.com/tkyatg/example-grpc-definition v0.0.0-20220101153026-516a83af784e
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	google.golang.org/grpc v1.43.0
 )

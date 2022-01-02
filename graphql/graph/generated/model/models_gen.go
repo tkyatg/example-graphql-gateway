@@ -10,3 +10,7 @@ type AuthorizeRequest struct {
 type AuthorizeResponse struct {
 	JwtToken string `json:"jwtToken"`
 }
+
+type GetLoginUserResponse struct {
+	UserUUID string `json:"userUUID"`
+}

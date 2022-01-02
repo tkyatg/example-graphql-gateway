@@ -6,22 +6,21 @@ package resolver
 import (
 	"context"
 	"example-graphql-grpc/graphql/graph/generated"
-	"fmt"
 )
 
 func (r *mutationResolver) HelthCheck(ctx context.Context) (bool, error) {
-	panic(fmt.Errorf("not implemented"))
+	return true, nil
 }
 
 func (r *queryResolver) HelthCheck(ctx context.Context) (bool, error) {
-	panic(fmt.Errorf("not implemented"))
+	return true, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
-func (r *resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
-func (r *resolver) Query() generated.QueryResolver { return &queryResolver{r} }
+func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
-type mutationResolver struct{ *resolver }
-type queryResolver struct{ *resolver }
+type mutationResolver struct{ *Resolver }
+type queryResolver struct{ *Resolver }

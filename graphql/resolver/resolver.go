@@ -14,8 +14,8 @@ import (
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-type resolver struct {
-	accessor authserviceaccessor.AuthCommandServiceAccessor
+type Resolver struct {
+	authCommandAccessor authserviceaccessor.AuthCommandServiceAccessor
 }
 
 func NewResolver(ctx context.Context, env shared.Env) generated.ResolverRoot {
@@ -25,10 +25,11 @@ func NewResolver(ctx context.Context, env shared.Env) generated.ResolverRoot {
 	if err != nil {
 		panic(err)
 	}
-	client := definition.NewAuthCommandServiceClient(conn)
-	accessor := authserviceaccessor.NewAuthServiceAccessor(client)
+	// auth service
+	authCommandClient := definition.NewAuthCommandServiceClient(conn)
+	authCommandAccessor := authserviceaccessor.NewAuthServiceAccessor(authCommandClient)
 
-	return &resolver{
-		accessor,
+	return &Resolver{
+		authCommandAccessor,
 	}
 }

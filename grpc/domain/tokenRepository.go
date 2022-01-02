@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -14,11 +13,6 @@ type (
 	}
 	TokenRepository interface {
 		GenerateJwtToken(attr map[shared.ClaimKey]interface{}) (JwtToken, error)
-		VerifyJwtToken(signedString string) (*VerifyJwtTokenResponse, error)
-	}
-	VerifyJwtTokenResponse struct {
-		UserUUID  string
-		TokenType string
 	}
 )
 
@@ -43,49 +37,4 @@ func (t *tokenRepository) GenerateJwtToken(attr map[shared.ClaimKey]interface{})
 		return "", err
 	}
 	return JwtToken(tokenString), nil
-}
-
-func (t *tokenRepository) VerifyJwtToken(signedString string) (*VerifyJwtTokenResponse, error) {
-	token, err := jwt.Parse(signedString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New(string(shared.TokenUnexpected))
-		}
-		return []byte(t.env.GetSignKey()), nil
-	})
-
-	if err != nil {
-		if ve, ok := err.(*jwt.ValidationError); ok {
-			if ve.Errors&jwt.ValidationErrorExpired != 0 {
-				return nil, errors.New(string(shared.TokenExpired))
-			} else {
-				return nil, errors.New(string(shared.TokenInvalid))
-			}
-		} else {
-			return nil, errors.New(string(shared.TokenInvalid))
-		}
-	}
-
-	if token == nil {
-		return nil, errors.New(string(shared.TokenNotFound))
-	}
-
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return nil, errors.New(string(shared.ClaimNotFound))
-	}
-	userUUID := ""
-	uUUID, ok := claims[string(shared.UserUUIDKey)]
-	if ok {
-		userUUID = uUUID.(string)
-	}
-	tokenType := ""
-	tType, ok := claims[string(shared.TokenTypeKey)]
-	if ok {
-		tokenType = tType.(string)
-	}
-
-	return &VerifyJwtTokenResponse{
-		UserUUID:  userUUID,
-		TokenType: tokenType,
-	}, nil
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func (r *mutationResolver) Authorize(ctx context.Context, input model.AuthorizeRequest) (*model.AuthorizeResponse, error) {
-	res, err := r.accessor.Authorization(ctx, &authserviceaccessor.AuthorizationRequest{
+	res, err := r.authCommandAccessor.Authorization(ctx, &authserviceaccessor.AuthorizationRequest{
 		Email:    input.Email,
 		Password: input.Password,
 	})

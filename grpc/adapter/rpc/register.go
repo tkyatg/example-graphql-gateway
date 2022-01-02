@@ -7,7 +7,9 @@ import (
 
 func (t *server) register(
 	authCommandServiceServer definition.AuthCommandServiceServer,
+	userQueryServiceServer definition.UserQueryServiceServer,
 ) {
 	definition.RegisterAuthCommandServiceServer(t.rpc, authCommandServiceServer)
+	definition.RegisterUserQueryServiceServer(t.rpc, userQueryServiceServer)
 	reflection.Register(t.rpc)
 }

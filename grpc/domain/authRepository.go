@@ -38,7 +38,6 @@ func NewAuthRepository(tokenRepo TokenRepository, da AuthDataAccessor, hash shar
 	}
 }
 func (t *authRepository) Authorization(attr *authorizationAttributes) (*AuthorizationResponse, error) {
-	// TODO: transaction
 	res, err := t.da.getUserByEmail(&getUserByEmailRequest{
 		email: string(attr.email),
 	})
@@ -48,10 +47,8 @@ func (t *authRepository) Authorization(attr *authorizationAttributes) (*Authoriz
 	if !t.hash.IsSameString(res.encryptedPassword, string(attr.password)) {
 		return nil, errors.New(string(shared.PasswordFail))
 	}
-	// TODO: send email with token
 	jwtToken, err := t.tokenRepo.GenerateJwtToken(map[shared.ClaimKey]interface{}{
-		shared.TokenTypeKey: shared.UserAuthenticatedToken,
-		shared.UserUUIDKey:  res.userUUID,
+		shared.UserUUIDKey: res.userUUID,
 	})
 	if err != nil {
 		return nil, err

@@ -7,6 +7,7 @@ import (
 	"github.com/tkyatg/example-graphql-grpc/grpc/adapter/hash"
 	authcommand "github.com/tkyatg/example-graphql-grpc/grpc/commands/authCommand"
 	"github.com/tkyatg/example-graphql-grpc/grpc/domain"
+	userquery "github.com/tkyatg/example-graphql-grpc/grpc/queries/userQuery"
 	"github.com/tkyatg/example-graphql-grpc/grpc/shared"
 )
 
@@ -29,6 +30,11 @@ func CreateContainer(
 	}
 	hashOpt := dject.RegisterOptions{Interfaces: []reflect.Type{reflect.TypeOf((*shared.Hash)(nil)).Elem()}}
 	if err := container.Register(hash.NewHash, hashOpt); err != nil {
+		return nil, err
+	}
+	// query
+	// userquery
+	if err := container.Register(userquery.NewServer); err != nil {
 		return nil, err
 	}
 
